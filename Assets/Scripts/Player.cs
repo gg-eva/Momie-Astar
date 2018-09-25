@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-    public MapManager mapManager;
-
     [HideInInspector] public Vector2Int coord;
     [HideInInspector] public Vector2Int moveAttempt;
     [HideInInspector] public int turnsToWait;
 
     private void Awake()
     {
-        //mapManager = GameObject.Find("GameManager").GetComponent<MapManager>();
         turnsToWait = 0;
     }
 
