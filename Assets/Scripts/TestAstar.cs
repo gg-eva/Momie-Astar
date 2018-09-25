@@ -9,6 +9,7 @@ namespace AstarTest
 {
     public class TestAstar : MonoBehaviour
     {
+        //FOR TEST : NOT WORKING ANYMORE BECAUSE IT NEEDS TO REMOVE MONOBEVIOUR FROM TILE (not allowed with new) (and map manager depends on Tile)
         // Use this for initialization
         void Start()
         {

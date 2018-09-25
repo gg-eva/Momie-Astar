@@ -133,18 +133,26 @@ public class MapManager : MonoBehaviour
 
         //Game Over info
         isGameOver = false;
+
+        //Debug
+        Debug.Log("MAP:\n" + tileMap.ToString());
+        Debug.Log("NAV:\n" + tileMapNavEnemy.MapWithCostToString());
     }
 
 
     public void UpdateNavEnemy()
     {
-        //TEMP
         tileMapNavEnemy.start = tileMap.TileFromCoordinates(enemy.coord);
         tileMapNavEnemy.target = tileMap.TileFromCoordinates(player.coord);
+
+        //Restart the pathfinding (not optimal)
         tileMapNavEnemy.InitAstar();
 
         //Update trace
         UpdateTrace();
+
+        //Debug
+        Debug.Log("NAV:\n" + tileMapNavEnemy.MapWithCostToString());
     }
 
     public void UpdateTrace()

@@ -16,8 +16,8 @@ public class Tile : MonoBehaviour{
     public override string ToString()
     {
         if (obstacle)
-            return "X";
+            return " X";
         else
-            return "" + tileCost;
+            return "" + tileCost.ToString("D2");
     }
 }

@@ -6,7 +6,7 @@ namespace Astar
    
     public class TileMap
     {
-        //Origin at letf top (0,0)
+        //Origin at letf bottom (0,0)
         public readonly int X;
         public readonly int Y;
         public readonly int size;
@@ -113,7 +113,7 @@ namespace Astar
         public override string ToString()
         {
             string res = "";
-            for (int y = 0; y < Y; ++y)  
+            for (int y = Y - 1; y >= 0; --y)
             {
                 for (int x = 0; x < X; ++x)
                 {
@@ -289,25 +289,24 @@ namespace Astar
         public string MapWithCostToString()
         {
             string res = "";
-            for (int y = 0; y < map.Y; ++y) 
+            for (int y = map.Y - 1; y >=0 ; --y) 
             {
                 for (int x = 0; x < map.X; ++x)
                 {
                     int index = y * map.X + x;
                     Tile tile = map.map[index];
                     if (close.ContainsKey(tile))
-                        res += close[tile].x;
+                        res += close[tile].x.ToString("D2");
                     else if (open.ContainsKey(tile))
-                        res += open[tile].x;
+                        res += open[tile].x.ToString("D2");
                     else
                     {
                         if(tile.obstacle)
                             res += tile;
                         else
-                            res += "?";
+                            res += " ?";
                     }
                         
-
                     res += " ";
                 }
                 res += "\n";
