@@ -85,19 +85,19 @@ namespace Astar
                 surroundingTiles.Add(map[index - 1]);
 
             if (up && right)
-                //if (!map[index - X].obstacle && !map[index + 1].obstacle)
+                if (!map[index - X].obstacle && !map[index + 1].obstacle)
                     surroundingTiles.Add(map[index - X + 1]);
 
             if (up && left)
-                //if (!map[index - X].obstacle && !map[index - 1].obstacle)
+                if (!map[index - X].obstacle && !map[index - 1].obstacle)
                     surroundingTiles.Add(map[index - X - 1]);
 
             if (down && right)
-                //if (!map[index + X].obstacle && !map[index + 1].obstacle)
+                if (!map[index + X].obstacle && !map[index + 1].obstacle)
                     surroundingTiles.Add(map[index + X + 1]);
 
             if (down && left)
-                //if (!map[index + X].obstacle && !map[index - 1].obstacle)
+                if (!map[index + X].obstacle && !map[index - 1].obstacle)
                     surroundingTiles.Add(map[index + X - 1]);
 
             return surroundingTiles;
