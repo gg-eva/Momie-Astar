@@ -7,8 +7,8 @@ using Astar;
 
 public class MapManager : MonoBehaviour
 {
-
-    public int labSize = 5;     //Number of tiles of one side
+    [Range(6, 20)]
+    public int labSize;     //Number of tiles of one side
     public Trace traceRef;      //Trace the shortest path
     public Tile wallRef;        //Wall
     public Tile safeRef;        //Empty tile
@@ -16,6 +16,8 @@ public class MapManager : MonoBehaviour
     public Player playerRef;    //Player
     public Enemy enemyRef;      //Enemy
     public Skull gameOverSkull; //GameOver display
+    [Range(0.0f, 1.0f)]
+    public float ratioDetectionDistance;    //Ratio used for Raycast of enemy
 
     public Text playerTurnsText;
     public Text enemyTurnsText;
@@ -39,6 +41,7 @@ public class MapManager : MonoBehaviour
 
     //For movement
     TileMapNav tileMapNavEnemy;
+    bool enemyCanSeePlayer;
 
     //Before any start
     private void Awake()
@@ -123,13 +126,12 @@ public class MapManager : MonoBehaviour
 
         tileMap = new TileMap(tiles, labSize, labSize);
 
-        //Nav info for the enemy
-        tileMapNavEnemy = new TileMapNav(tileMap, tileMap.TileFromCoordinates(enemy.coord), tileMap.TileFromCoordinates(playerCoord));
-        tileMapNavEnemy.InitAstar();
-
         //Trace
         trace = Instantiate(traceRef);
-        UpdateTrace();
+
+        //Nav info for the enemy
+        tileMapNavEnemy = new TileMapNav(tileMap, tileMap.TileFromCoordinates(enemy.coord), tileMap.TileFromCoordinates(enemy.coord));
+        UpdateNavEnemy(); //Have  tileMapNavEnemy.InitAstar();  in it
 
         //Game Over info
         isGameOver = false;
@@ -139,11 +141,41 @@ public class MapManager : MonoBehaviour
         Debug.Log("NAV:\n" + tileMapNavEnemy.MapWithCostToString());
     }
 
+    public bool EnemyCanSeeYou()
+    {
+        bool canSee = false;
+        Vector2 origin = GetPos2DFromCoordinates(enemy.coord);
+        Vector2 target = GetPos2DFromCoordinates(player.coord);
+        Vector2 direction = target - origin;
+
+        float maxDistance = labSize * wallSize * ratioDetectionDistance;
+        float distancePlayerEnemy = Vector2.Distance(target, origin);
+
+        if(distancePlayerEnemy < maxDistance)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(origin, direction, distancePlayerEnemy);
+            if (hit.collider == null)
+            {
+                canSee = true;
+            }
+        }
+
+        enemyCanSeePlayer = canSee;
+        return canSee;
+    }
+
+    public void SetEnemyTarget()
+    {
+        if(EnemyCanSeeYou())
+        {
+            tileMapNavEnemy.target = tileMap.TileFromCoordinates(player.coord);
+        }
+    }
 
     public void UpdateNavEnemy()
     {
         tileMapNavEnemy.start = tileMap.TileFromCoordinates(enemy.coord);
-        tileMapNavEnemy.target = tileMap.TileFromCoordinates(player.coord);
+        SetEnemyTarget();
 
         //Restart the pathfinding (not optimal)
         tileMapNavEnemy.InitAstar();
@@ -170,6 +202,14 @@ public class MapManager : MonoBehaviour
         float ypos = (-labSize / 2 + coord.y) * wallSize;
 
         return new Vector3(xpos, ypos, 0);
+    }
+
+    Vector2 GetPos2DFromCoordinates(Vector2Int coord)
+    {
+        float xpos = (-labSize / 2 + coord.x) * wallSize;
+        float ypos = (-labSize / 2 + coord.y) * wallSize;
+
+        return new Vector2(xpos, ypos);
     }
 
     Tile FindRandomTile()
@@ -208,6 +248,7 @@ public class MapManager : MonoBehaviour
     private bool TryMoveEnemy()
     {
         bool moved = false;
+
         if (tileMapNavEnemy.PathFound())
         {
             Tile enemyTile = tileMap.TileFromCoordinates(enemy.coord);
@@ -222,6 +263,7 @@ public class MapManager : MonoBehaviour
                 moved = true;
             }
         }
+
         return moved;
     }
 
@@ -236,12 +278,25 @@ public class MapManager : MonoBehaviour
         }
         else
         {
+            //Update turn values
             player.turnsToWait--;
             enemy.turnsToWait--;
+
+            //Clamping
+            if (player.turnsToWait < 0)
+                player.turnsToWait = 0;
+
             if (enemy.turnsToWait <= 0)
             {
+                enemy.turnsToWait = 0;  //Clamping
+
+                //Movement
                 TryMoveEnemy();
-                UpdateNavEnemy();
+                //If enemy couldn't see the player before AND now it can see it, then update nav
+                if(!enemyCanSeePlayer)
+                    SetEnemyTarget();
+                    if (enemyCanSeePlayer)
+                        UpdateNavEnemy();
             }
         }
 

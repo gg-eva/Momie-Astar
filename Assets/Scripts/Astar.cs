@@ -133,6 +133,8 @@ namespace Astar
         public Tile start;
         public Tile target;
 
+        int nextCoord;
+
         //Vector3Int x: estimated cost, y: distance to get there, z: index of previous
         public Dictionary<Tile, Vector3Int> open  = new Dictionary<Tile, Vector3Int>();
         public Dictionary<Tile, Vector3Int> close = new Dictionary<Tile, Vector3Int>();
@@ -216,6 +218,8 @@ namespace Astar
             }
 
             path = Path();
+
+            nextCoord = 1;
         }
 
         List<Tile> Path()
@@ -257,10 +261,12 @@ namespace Astar
         public Tile NextCoord()
         {
             Tile next;
-            if (path.Count >= 2)
-                next = path[1];
+
+            if (path.Count >= nextCoord +1)
+                next = path[nextCoord];
             else
                 next = start;
+            nextCoord++;
  
             return next;
         }
