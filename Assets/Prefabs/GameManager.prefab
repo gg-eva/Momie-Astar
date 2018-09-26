@@ -52,7 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ffaa70c4717664984ada279a9c0a9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  labSize: 10
+  labSize: 11
   traceRef: {fileID: 114381792231356452, guid: 1460adf2d1c1d4944ad63d6a549e173f, type: 2}
   wallRef: {fileID: 114699070208356232, guid: c7ded67ec14e21d498dd904bd21436af, type: 2}
   safeRef: {fileID: 114866587694775406, guid: 7753c5b0111a15449a6f08fa16b529e3, type: 2}
