@@ -452,12 +452,7 @@ Prefab:
     - target: {fileID: 114253253057583500, guid: 393c3c8e4136c5143b3f01767a841371,
         type: 2}
       propertyPath: labSize
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 114253253057583500, guid: 393c3c8e4136c5143b3f01767a841371,
-        type: 2}
-      propertyPath: ratioDetectionDistance
-      value: 0.45
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 393c3c8e4136c5143b3f01767a841371, type: 2}
